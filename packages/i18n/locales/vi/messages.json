@@ -44,7 +44,7 @@
     "message": "Sao chép"
   },
   "panelCopied": {
-    "message": "Đã chép!"
+    "message": "Đã chép ✓"
   },
   "panelNoApiKey": {
     "message": "Chưa có API key — mở Cài đặt để thêm."
@@ -66,5 +66,50 @@
   },
   "displayErrorReset": {
     "message": "Chạy lại"
+  },
+  "panelScenario": {
+    "message": "Tình huống"
+  },
+  "panelAnswerThat": {
+    "message": "Trả lời luôn"
+  },
+  "panelCopyOpt": {
+    "message": "Chép phương án"
+  },
+  "panelTranscript": {
+    "message": "Đoạn hội thoại"
+  },
+  "panelTranscriptHint": {
+    "message": "bấm câu để hỏi AI · VI để dịch"
+  },
+  "panelThinking": {
+    "message": "Đang suy nghĩ…"
+  },
+  "panelNotForYou": {
+    "message": "Không phải câu hỏi của bạn. Vẫn đang nghe…"
+  },
+  "panelWaiting": {
+    "message": "Đang chờ ai đó hỏi bạn điều gì đó…"
+  },
+  "panelDebugBanner": {
+    "message": "DEBUG — mọi giọng nói đều tính là người khác"
+  },
+  "panelHeard": {
+    "message": "Nghe được"
+  },
+  "panelStopListening": {
+    "message": "Dừng nghe"
+  },
+  "panelStartListening": {
+    "message": "Bắt đầu nghe"
+  },
+  "panelTranslating": {
+    "message": "Đang dịch…"
+  },
+  "panelSpeakerThem": {
+    "message": "Họ"
+  },
+  "panelSpeakerMe": {
+    "message": "Mình"
   }
 }

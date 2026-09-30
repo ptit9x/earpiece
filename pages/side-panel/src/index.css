@@ -1,1 +1,44 @@
 @import '@extension/ui/global.css';
+
+/* Inter variable font — bundled locally (no CDN, CSP-safe) */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('./assets/InterVariable.woff2') format('woff2-variations');
+}
+
+/* Panel-wide micro-transitions on interactive elements */
+button,
+a,
+select,
+input {
+  transition:
+    background-color 150ms ease-out,
+    border-color 150ms ease-out,
+    color 150ms ease-out,
+    transform 120ms ease-out,
+    box-shadow 150ms ease-out,
+    opacity 150ms ease-out;
+}
+
+/* Text gradient utility for brand moments */
+.text-gradient {
+  background: linear-gradient(135deg, var(--ep-accent), var(--ep-accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Animated shimmering placeholder for thinking states */
+.ep-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--ep-glass) 25%,
+    var(--ep-border-strong) 50%,
+    var(--ep-glass) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}

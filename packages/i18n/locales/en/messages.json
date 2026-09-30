@@ -44,7 +44,7 @@
     "message": "Copy"
   },
   "panelCopied": {
-    "message": "Copied!"
+    "message": "Copied ✓"
   },
   "panelNoApiKey": {
     "message": "No API key set — open Options to add one."
@@ -66,5 +66,50 @@
   },
   "displayErrorReset": {
     "message": "Run Again"
+  },
+  "panelScenario": {
+    "message": "Scenario"
+  },
+  "panelAnswerThat": {
+    "message": "Answer that"
+  },
+  "panelCopyOpt": {
+    "message": "Copy option"
+  },
+  "panelTranscript": {
+    "message": "Transcript"
+  },
+  "panelTranscriptHint": {
+    "message": "click a line to answer · VI to translate"
+  },
+  "panelThinking": {
+    "message": "Thinking…"
+  },
+  "panelNotForYou": {
+    "message": "Not for you. Still listening…"
+  },
+  "panelWaiting": {
+    "message": "Waiting for someone to ask you something…"
+  },
+  "panelDebugBanner": {
+    "message": "DEBUG — every voice counts as someone else"
+  },
+  "panelHeard": {
+    "message": "Heard"
+  },
+  "panelStopListening": {
+    "message": "Stop listening"
+  },
+  "panelStartListening": {
+    "message": "Start listening"
+  },
+  "panelTranslating": {
+    "message": "Translating…"
+  },
+  "panelSpeakerThem": {
+    "message": "Them"
+  },
+  "panelSpeakerMe": {
+    "message": "Me"
   }
 }
