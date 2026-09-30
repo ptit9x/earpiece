@@ -111,5 +111,8 @@
   },
   "panelSpeakerMe": {
     "message": "Me"
+  },
+  "panelOpenFull": {
+    "message": "Open in new tab"
   }
 }

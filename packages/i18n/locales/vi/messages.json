@@ -111,5 +111,8 @@
   },
   "panelSpeakerMe": {
     "message": "Mình"
+  },
+  "panelOpenFull": {
+    "message": "Mở tab mới"
   }
 }

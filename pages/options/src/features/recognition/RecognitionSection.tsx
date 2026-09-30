@@ -25,6 +25,8 @@ const RecognitionSection = ({ config, patch }: Props) => (
             <option value="en-US">English (US)</option>
             <option value="vi-VN">Tiếng Việt</option>
             <option value="ja-JP">日本語</option>
+            <option value="ko-KR">한국어</option>
+            <option value="zh-CN">中文 (简体)</option>
           </Select>
         </Field>
       </div>

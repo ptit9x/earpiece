@@ -36,6 +36,7 @@ const SidePanel = () => {
         activeScenario={session.activeScenario}
         onScenarioChange={session.changeScenario}
         onOpenSettings={() => chrome.runtime.openOptionsPage()}
+        onOpenFullView={() => chrome.tabs.create({ url: chrome.runtime.getURL('side-panel/index.html') })}
       />
 
       <ControlBar

@@ -109,12 +109,13 @@ export const DEFAULTS = {
 
 // The multi-option bilingual schema needs far more room than the original
 // single-sentence one. A profile still carrying the old stored value would
-// truncate every answer, so retire that exact value on read.
-const STALE_MAX_TOKENS = [160];
+// truncate every answer, so retire that exact value on read and drop it from
+// storage in the same pass.
+const STALE_MAX_TOKENS = new Set([160, 0, undefined]);
 
 export async function getConfig() {
   const stored = await chrome.storage.local.get(Object.keys(DEFAULTS));
-  if (STALE_MAX_TOKENS.includes(stored.maxTokens)) {
+  if (STALE_MAX_TOKENS.has(stored.maxTokens)) {
     delete stored.maxTokens;
     chrome.storage.local.remove('maxTokens').catch(() => {});
   }

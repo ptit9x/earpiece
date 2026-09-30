@@ -8,9 +8,18 @@ type Props = {
   activeScenario: string;
   onScenarioChange: (id: string) => void;
   onOpenSettings: () => void;
+  onOpenFullView: () => void;
 };
 
-const Header = ({ listening, error, scenarios, activeScenario, onScenarioChange, onOpenSettings }: Props) => {
+const Header = ({
+  listening,
+  error,
+  scenarios,
+  activeScenario,
+  onScenarioChange,
+  onOpenSettings,
+  onOpenFullView,
+}: Props) => {
   const orbClass = listening
     ? 'bg-[var(--ep-success)] animate-pulse-dot'
     : error
@@ -53,6 +62,26 @@ const Header = ({ listening, error, scenarios, activeScenario, onScenarioChange,
             </span>
           </div>
         )}
+        <button
+          type="button"
+          onClick={onOpenFullView}
+          title={t('panelOpenFull')}
+          aria-label={t('panelOpenFull')}
+          className="border-ep-border bg-ep-surface-2 text-ep-muted hover:border-ep-border-strong hover:text-ep-text flex h-7 w-7 items-center justify-center rounded-lg border">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            <polyline points="15 3 21 3 21 9" />
+            <line x1="10" y1="14" x2="21" y2="3" />
+          </svg>
+        </button>
         <button
           type="button"
           onClick={onOpenSettings}
