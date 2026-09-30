@@ -1,7 +1,7 @@
 import { t } from '@extension/i18n';
 import { useStorage } from '@extension/shared';
 import { exampleThemeStorage } from '@extension/storage';
-import type { Turn, Translation } from './types';
+import type { Turn, Translation } from '../types';
 
 type Props = {
   turns: Turn[];

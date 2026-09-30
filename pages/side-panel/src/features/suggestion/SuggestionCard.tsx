@@ -1,6 +1,6 @@
 import { t } from '@extension/i18n';
 import { useEffect, useState } from 'react';
-import type { Suggestion } from './types';
+import type { Suggestion } from '../types';
 
 type Props = {
   suggestion: Suggestion | null;

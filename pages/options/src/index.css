@@ -1,1 +1,9 @@
 @import '@extension/ui/global.css';
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../side-panel/src/assets/InterVariable.woff2') format('woff2-variations');
+}

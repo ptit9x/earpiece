@@ -1,5 +1,5 @@
 import { t } from '@extension/i18n';
-import type { ScenarioInfo } from './types';
+import type { ScenarioInfo } from '../types';
 
 type Props = {
   listening: boolean;
