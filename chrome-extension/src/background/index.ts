@@ -1,9 +1,8 @@
 import 'webextension-polyfill';
-import { exampleThemeStorage } from '@extension/storage';
 
-exampleThemeStorage.get().then(theme => {
-  console.log('theme', theme);
-});
+// Open the side panel when the toolbar action is clicked (no popup).
+chrome.sidePanel
+  .setPanelBehavior({ openPanelOnActionClick: true })
+  .catch(err => console.error('Earpiece: setPanelBehavior failed', err));
 
-console.log('Background loaded');
-console.log("Edit 'chrome-extension/src/background/index.ts' and save to reload.");
+console.log('Earpiece AI background loaded');

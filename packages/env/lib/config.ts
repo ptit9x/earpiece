@@ -6,5 +6,5 @@ export const baseEnv =
   }).parsed ?? {};
 
 export const dynamicEnvValues = {
-  CEB_NODE_ENV: baseEnv.CEB_DEV === 'true' ? 'development' : 'production',
+  IC_NODE_ENV: baseEnv.IC_DEV === 'true' ? 'development' : 'production',
 } as const;

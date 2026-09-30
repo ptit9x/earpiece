@@ -1,0 +1,70 @@
+{
+  "extensionDescription": {
+    "description": "Extension description",
+    "message": "Ghi âm + chuyển giọng nói thành văn bản thời gian thực, gợi ý câu trả lời bằng AI cho các buổi phỏng vấn qua video call (Meet / Zoom / Teams)."
+  },
+  "extensionName": {
+    "description": "Extension name",
+    "message": "Earpiece AI"
+  },
+  "panelStatusIdle": {
+    "message": "Chờ — bấm Start để bắt đầu nghe cuộc họp"
+  },
+  "panelStatusListening": {
+    "message": "Đang nghe…"
+  },
+  "panelStatusError": {
+    "message": "Lỗi: $DETAIL$",
+    "placeholders": {
+      "detail": {
+        "content": "$1",
+        "example": "từ chối quyền micro"
+      }
+    }
+  },
+  "panelStart": {
+    "message": "Bắt đầu"
+  },
+  "panelStop": {
+    "message": "Dừng"
+  },
+  "panelAskAi": {
+    "message": "Gợi ý trả lời"
+  },
+  "panelCustomQuestion": {
+    "message": "Gõ câu hỏi riêng…"
+  },
+  "panelHistory": {
+    "message": "Lịch sử"
+  },
+  "panelRecap": {
+    "message": "Tóm tắt"
+  },
+  "panelCopy": {
+    "message": "Sao chép"
+  },
+  "panelCopied": {
+    "message": "Đã chép!"
+  },
+  "panelNoApiKey": {
+    "message": "Chưa có API key — mở Cài đặt để thêm."
+  },
+  "panelSettings": {
+    "message": "Cài đặt"
+  },
+  "displayErrorInfo": {
+    "message": "Có lỗi xảy ra"
+  },
+  "displayErrorDescription": {
+    "message": "Rất tiếc, đã có lỗi khi tải trang."
+  },
+  "displayErrorDetailsInfo": {
+    "message": "Chi tiết lỗi:"
+  },
+  "displayErrorUnknownErrorInfo": {
+    "message": "Lỗi không xác định"
+  },
+  "displayErrorReset": {
+    "message": "Chạy lại"
+  }
+}

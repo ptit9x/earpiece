@@ -1,13 +1,13 @@
 {
-  "name": "chrome-extension-boilerplate-react-vite",
-  "version": "0.5.0",
-  "description": "chrome extension boilerplate",
+  "name": "earpiece",
+  "version": "0.1.0",
+  "description": "Earpiece AI — live meeting transcription + AI answer copilot Chrome extension for video call interviews",
   "license": "MIT",
   "private": true,
   "sideEffects": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite.git"
+    "url": "https://github.com/ptit9x/earpiece.git"
   },
   "type": "module",
   "scripts": {
@@ -19,10 +19,10 @@
     "type-check": "turbo type-check",
     "base-build": "pnpm clean:bundle && turbo build",
     "build": "pnpm set-global-env && pnpm base-build",
-    "build:firefox": "pnpm set-global-env CLI_CEB_FIREFOX=true && pnpm base-build",
+    "build:firefox": "pnpm set-global-env CLI_IC_FIREFOX=true && pnpm base-build",
     "base-dev": "pnpm clean:bundle && turbo ready && turbo watch dev",
-    "dev": "pnpm set-global-env CLI_CEB_DEV=true && pnpm base-dev",
-    "dev:firefox": "pnpm set-global-env CLI_CEB_DEV=true CLI_CEB_FIREFOX=true && pnpm base-dev",
+    "dev": "pnpm set-global-env CLI_IC_DEV=true && pnpm base-dev",
+    "dev:firefox": "pnpm set-global-env CLI_IC_DEV=true CLI_IC_FIREFOX=true && pnpm base-dev",
     "zip": "pnpm build && pnpm -F zipper zip",
     "zip:firefox": "pnpm build:firefox && pnpm -F zipper zip",
     "e2e": "pnpm zip && turbo e2e",

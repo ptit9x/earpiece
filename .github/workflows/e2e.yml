@@ -13,7 +13,7 @@ jobs:
       matrix:
         browser: [chrome, firefox]
     env:
-      CEB_CI: true
+      IC_CI: true
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4

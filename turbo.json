@@ -1,7 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
-  "globalEnv": ["CEB_*", "CLI_CEB_*"],
+  "globalEnv": ["IC_*", "CLI_IC_*"],
   "globalDependencies": [".env"],
   "concurrency": "12",
   "tasks": {

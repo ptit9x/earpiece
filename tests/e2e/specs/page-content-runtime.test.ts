@@ -27,8 +27,8 @@ describe('Webextension Content Runtime Script', () => {
     await contentScriptsButton.click();
 
     // Check if id exists on the page
-    const runtimeExampleElement = await $('#CEB-extension-runtime-example').getElement();
-    const runtimeAllElement = await $('#CEB-extension-runtime-all').getElement();
+    const runtimeExampleElement = await $('#IC-extension-runtime-example').getElement();
+    const runtimeAllElement = await $('#IC-extension-runtime-all').getElement();
 
     await expect(runtimeExampleElement).toBeExisting();
     await expect(runtimeAllElement).toBeExisting();

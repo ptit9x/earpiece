@@ -1,31 +1,56 @@
 {
   "extensionDescription": {
     "description": "Extension description",
-    "message": "Chrome extension boilerplate developed with Vite, React and Typescript"
+    "message": "Live meeting transcription + AI answer copilot for video call interviews (Meet / Zoom / Teams)."
   },
   "extensionName": {
     "description": "Extension name",
-    "message": "Chrome extension boilerplate"
+    "message": "Earpiece AI"
   },
-  "toggleTheme": {
-    "message": "Toggle theme"
+  "panelStatusIdle": {
+    "message": "Idle — click Start to capture the call"
   },
-  "injectButton": {
-    "message": "Click to inject Content Scripts"
+  "panelStatusListening": {
+    "message": "Listening…"
   },
-  "greeting": {
-    "description": "Greeting message",
-    "message": "Hello, My name is $NAME$",
+  "panelStatusError": {
+    "message": "Error: $DETAIL$",
     "placeholders": {
-      "name": {
+      "detail": {
         "content": "$1",
-        "example": "John Doe"
+        "example": "microphone permission denied"
       }
     }
   },
-  "hello": {
-    "description": "Placeholder example",
-    "message": "Hello $1"
+  "panelStart": {
+    "message": "Start"
+  },
+  "panelStop": {
+    "message": "Stop"
+  },
+  "panelAskAi": {
+    "message": "Suggest answer"
+  },
+  "panelCustomQuestion": {
+    "message": "Type a custom question…"
+  },
+  "panelHistory": {
+    "message": "History"
+  },
+  "panelRecap": {
+    "message": "Recap"
+  },
+  "panelCopy": {
+    "message": "Copy"
+  },
+  "panelCopied": {
+    "message": "Copied!"
+  },
+  "panelNoApiKey": {
+    "message": "No API key set — open Options to add one."
+  },
+  "panelSettings": {
+    "message": "Settings"
   },
   "displayErrorInfo": {
     "message": "Error occur"
