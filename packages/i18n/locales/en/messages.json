@@ -114,5 +114,8 @@
   },
   "panelOpenFull": {
     "message": "Open in new tab"
+  },
+  "panelAutoTranslate": {
+    "message": "Auto-translate"
   }
 }

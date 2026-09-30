@@ -42,3 +42,21 @@ input {
   background-size: 200% 100%;
   animation: shimmer 1.4s linear infinite;
 }
+
+/* One-shot glow pulse when a fresh suggestion lands — draws the eye
+   without looping forever. Runs 3 beats then settles. */
+.ep-pulse-once {
+  animation: pulse-glow 1s ease-in-out 3;
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+  50% {
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, var(--ep-accent) 35%, transparent),
+      0 0 24px color-mix(in srgb, var(--ep-accent) 25%, transparent);
+  }
+}

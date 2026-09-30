@@ -50,7 +50,7 @@ const SuggestionCard = ({ suggestion, thinking, message, onCopy }: Props) => {
   }
 
   return (
-    <section className="animate-slide-up border-ep-border-strong bg-ep-surface shadow-ep mx-4 mb-2 flex-none rounded-xl border p-4">
+    <section className="animate-slide-up ep-pulse-once border-ep-border-strong bg-ep-surface shadow-ep mx-4 mb-2 flex-none rounded-xl border p-4">
       {suggestion.heard && (
         <div className="mb-2.5">
           <div className="text-ep-faint mb-0.5 text-[9px] font-bold uppercase tracking-[0.14em]">{t('panelHeard')}</div>

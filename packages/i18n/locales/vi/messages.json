@@ -114,5 +114,8 @@
   },
   "panelOpenFull": {
     "message": "Mở tab mới"
+  },
+  "panelAutoTranslate": {
+    "message": "Tự động dịch"
   }
 }

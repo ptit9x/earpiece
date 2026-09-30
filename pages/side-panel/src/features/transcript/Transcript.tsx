@@ -6,6 +6,8 @@ import type { Turn, Translation } from '../types';
 type Props = {
   turns: Turn[];
   translations: Record<string, Translation>;
+  autoTranslate: boolean;
+  onAutoTranslateChange: (v: boolean) => void;
   onSuggest: (id: string) => void;
   onTranslate: (id: string) => void;
   onCopy: (text: string) => void;
@@ -49,11 +51,11 @@ const TurnBubble = ({ turn, trans, onSuggest, onTranslate, onCopy }: TurnProps) 
           title={t('panelAskAi')}
           className={
             isMe
-              ? 'animate-fade-in shadow-ep rounded-xl rounded-br-sm bg-gradient-to-br from-[var(--ep-accent)] to-[var(--ep-accent-2)] px-3.5 py-2 text-left text-[13px] leading-relaxed text-white'
-              : 'animate-fade-in border-ep-border bg-ep-surface-2 text-ep-text hover:border-ep-border-strong rounded-xl rounded-bl-sm border px-3.5 py-2 text-left text-[13px] leading-relaxed'
+              ? 'animate-fade-in shadow-ep rounded-xl rounded-br-sm bg-gradient-to-br from-[var(--ep-accent)] to-[var(--ep-accent-2)] px-3.5 py-2 text-left text-[14px] leading-relaxed text-white'
+              : 'animate-fade-in border-ep-border bg-ep-surface-2 text-ep-text hover:border-ep-border-strong rounded-xl rounded-bl-sm border px-3.5 py-2 text-left text-[14px] leading-relaxed'
           }>
           {!isMe && (
-            <div className="text-ep-faint mb-0.5 text-[9px] font-bold uppercase tracking-[0.14em]">
+            <div className="text-ep-faint mb-0.5 text-[10px] font-bold uppercase tracking-[0.14em]">
               {turn.speaker === 'remote' ? t('panelSpeakerThem').toUpperCase() : turn.speaker.toUpperCase()}
             </div>
           )}
@@ -76,7 +78,7 @@ const TurnBubble = ({ turn, trans, onSuggest, onTranslate, onCopy }: TurnProps) 
       </div>
 
       {trans && !trans.pending && !trans.error && trans.vi && (
-        <div className="animate-fade-in border-[var(--ep-accent)]/50 text-ep-muted mt-1 max-w-full border-l-2 pl-2 text-[11px] leading-relaxed">
+        <div className="animate-fade-in border-[var(--ep-accent)]/50 text-ep-text mt-1 max-w-full border-l-2 pl-2 text-[12.5px] leading-relaxed">
           {trans.vi}
         </div>
       )}
@@ -86,14 +88,35 @@ const TurnBubble = ({ turn, trans, onSuggest, onTranslate, onCopy }: TurnProps) 
   );
 };
 
-const Transcript = ({ turns, translations, onSuggest, onTranslate, onCopy }: Props) => {
+const Transcript = ({
+  turns,
+  translations,
+  autoTranslate,
+  onAutoTranslateChange,
+  onSuggest,
+  onTranslate,
+  onCopy,
+}: Props) => {
   const { isLight } = useStorage(exampleThemeStorage);
   const container = (
     <div className="flex flex-1 flex-col overflow-hidden px-4 pb-4">
-      <h2 className="text-ep-faint mb-2 text-[10px] font-bold uppercase tracking-[0.14em]">
-        {t('panelTranscript')}{' '}
-        <span className="font-normal normal-case tracking-normal opacity-80">{t('panelTranscriptHint')}</span>
-      </h2>
+      <div className="mb-2 flex items-center justify-between">
+        <h2 className="text-ep-faint text-[10px] font-bold uppercase tracking-[0.14em]">
+          {t('panelTranscript')}{' '}
+          <span className="font-normal normal-case tracking-normal opacity-80">{t('panelTranscriptHint')}</span>
+        </h2>
+        <button
+          type="button"
+          onClick={() => onAutoTranslateChange(!autoTranslate)}
+          title={t('panelAutoTranslate')}
+          className={`text-[10px] font-bold uppercase tracking-[0.12em] transition-colors ${
+            autoTranslate
+              ? 'bg-[var(--ep-accent)]/15 border-[var(--ep-accent)]/40 rounded-full border px-2.5 py-1 text-[var(--ep-accent)]'
+              : 'text-ep-faint hover:text-ep-muted rounded-full border border-transparent px-2.5 py-1'
+          }`}>
+          🌐 {t('panelAutoTranslate')}
+        </button>
+      </div>
       <div className="flex flex-1 flex-col gap-2.5 overflow-y-auto pr-1 [scroll-behavior:smooth]">
         {turns.map(turn => (
           <TurnBubble
