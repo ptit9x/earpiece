@@ -27,7 +27,7 @@ const manifest = {
   version: packageJson.version,
   description: '__MSG_extensionDescription__',
   host_permissions: [],
-  permissions: ['storage', 'tabCapture', 'offscreen', 'sidePanel'],
+  permissions: ['storage', 'tabCapture', 'offscreen', 'sidePanel', 'activeTab', 'scripting'],
   options_page: 'options/index.html',
   background: {
     service_worker: 'background.js',
