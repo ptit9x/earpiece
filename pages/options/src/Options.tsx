@@ -1,20 +1,39 @@
 import '@src/index.css';
 import ProviderSection from './features/provider/ProviderSection';
 import RecognitionSection from './features/recognition/RecognitionSection';
-import { useConfig, useModels, useTestConnection, withErrorBoundary, withSuspense } from '@extension/shared';
+import {
+  useConfigQuery,
+  useModelsQuery,
+  useTestConnectionMutation,
+  withErrorBoundary,
+  withSuspense,
+} from '@extension/shared';
 import { Button, ErrorDisplay, LoadingSpinner } from '@extension/ui';
 import { useEffect, useState } from 'react';
+import type { EarpieceConfig } from '@extension/shared';
 
 const Options = () => {
-  const { config, patchLocal, save } = useConfig();
+  // Config query: cached, revalidated after each save via setQueryData
+  const { data: config, isLoading, saveMutation } = useConfigQuery();
+  const [draft, setDraft] = useState<EarpieceConfig | null>(null);
+
+  // Keep the local draft in sync whenever fresh config arrives (first load / revalidate)
+  useEffect(() => {
+    if (config) setDraft(d => d ?? config);
+  }, [config]);
+
+  // Test connection: mutation (never cached)
+  const test = useTestConnectionMutation();
+
+  // Models: cached per baseUrl for 6h — switching providers or URLs refetches automatically
   const {
-    models,
-    loading: modelsLoading,
+    data: models,
+    isFetching: modelsLoading,
     error: modelsError,
-    load: loadModels,
-  } = useModels(config?.baseUrl ?? '', config?.apiKey ?? '');
-  const { testing, result, run: runTest } = useTestConnection();
-  const [saving, setSaving] = useState(false);
+    refetch: refetchModels,
+  } = useModelsQuery(draft?.baseUrl ?? '', draft?.apiKey ?? '', draft?.provider === 'openai-compatible');
+
+  // Test connection: mutation (never cached)
   const [savedAt, setSavedAt] = useState(0);
 
   useEffect(() => {
@@ -23,23 +42,20 @@ const Options = () => {
     return () => window.clearTimeout(t);
   }, [savedAt]);
 
-  const onSave = async () => {
-    setSaving(true);
-    try {
-      await save();
-      setSavedAt(Date.now());
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  if (!config) {
+  if (isLoading || !draft) {
     return (
-      <div className="bg-ep-bg flex h-screen items-center justify-center">
+      <div className="bg-ep-bg dark flex h-screen items-center justify-center">
         <LoadingSpinner />
       </div>
     );
   }
+
+  const patch = (p: Partial<EarpieceConfig>) => setDraft(d => (d ? { ...d, ...p } : d));
+
+  const onSave = async () => {
+    await saveMutation.mutateAsync(draft);
+    setSavedAt(Date.now());
+  };
 
   return (
     <div className="bg-ep-bg text-ep-text dark min-h-screen font-sans">
@@ -55,36 +71,38 @@ const Options = () => {
         </header>
 
         <ProviderSection
-          config={config}
-          patch={patchLocal}
-          models={models}
+          config={draft}
+          patch={patch}
+          models={models ?? []}
           modelsLoading={modelsLoading}
-          modelsError={modelsError}
-          onLoadModels={loadModels}
+          modelsError={modelsError instanceof Error ? modelsError.message : ''}
+          onLoadModels={() => refetchModels()}
         />
 
-        <RecognitionSection config={config} patch={patchLocal} />
+        <RecognitionSection config={draft} patch={patch} />
       </div>
 
       {/* Sticky action bar */}
       <div className="border-ep-border bg-ep-bg/95 fixed inset-x-0 bottom-0 border-t backdrop-blur">
         <div className="mx-auto flex max-w-2xl items-center gap-3 px-6 py-4">
-          <Button variant="primary" loading={saving} onClick={onSave}>
-            {saving ? 'Saving…' : 'Save settings'}
+          <Button variant="primary" loading={saveMutation.isPending} onClick={onSave}>
+            {saveMutation.isPending ? 'Saving…' : 'Save settings'}
           </Button>
-          <Button onClick={runTest} loading={testing}>
+          <Button onClick={() => test.mutate()} loading={test.isPending}>
             Test connection
           </Button>
           {savedAt > 0 && <span className="animate-fade-in text-[12px] text-[var(--ep-success)]">Saved ✓</span>}
-          {result && !testing && (
+          {test.data && !test.isPending && (
             <span
               className={
-                result.ok
+                test.data.ok
                   ? 'animate-fade-in truncate text-[12px] text-[var(--ep-success)]'
                   : 'animate-fade-in truncate text-[12px] text-[var(--ep-danger)]'
               }
-              title={result.error}>
-              {result.ok ? `✓ ${((result.latencyMs ?? 0) / 1000).toFixed(1)}s — model replied` : `✗ ${result.error}`}
+              title={test.data.error}>
+              {test.data.ok
+                ? `✓ ${((test.data.latencyMs ?? 0) / 1000).toFixed(1)}s — model replied`
+                : `✗ ${test.data.error}`}
             </span>
           )}
         </div>
