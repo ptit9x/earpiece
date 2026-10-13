@@ -8,7 +8,8 @@ import {
   withErrorBoundary,
   withSuspense,
 } from '@extension/shared';
-import { Button, ErrorDisplay, LoadingSpinner } from '@extension/ui';
+import { ZHIPU_BASE_URL } from '@extension/shared/lib/llm/config';
+import { Button, ErrorDisplay, LoadingSpinner, Header } from '@extension/ui';
 import { useEffect, useState } from 'react';
 import type { EarpieceConfig } from '@extension/shared';
 
@@ -26,12 +27,14 @@ const Options = () => {
   const test = useTestConnectionMutation();
 
   // Models: cached per baseUrl for 6h — switching providers or URLs refetches automatically
+  const modelsBaseUrl = draft?.provider === 'zhipu' ? ZHIPU_BASE_URL : (draft?.baseUrl ?? '');
+  const modelsEnabled = draft?.provider === 'openai-compatible' || draft?.provider === 'zhipu';
   const {
     data: models,
     isFetching: modelsLoading,
     error: modelsError,
     refetch: refetchModels,
-  } = useModelsQuery(draft?.baseUrl ?? '', draft?.apiKey ?? '', draft?.provider === 'openai-compatible');
+  } = useModelsQuery(modelsBaseUrl, draft?.apiKey ?? '', modelsEnabled);
 
   // Test connection: mutation (never cached)
   const [savedAt, setSavedAt] = useState(0);
@@ -60,15 +63,7 @@ const Options = () => {
   return (
     <div className="bg-ep-bg text-ep-text dark min-h-screen font-sans">
       <div className="mx-auto max-w-2xl space-y-6 px-6 py-8 pb-24">
-        <header className="flex items-center gap-3">
-          <div className="shadow-ep-glow flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--ep-accent)] to-[var(--ep-accent-2)] text-base">
-            🎧
-          </div>
-          <div>
-            <h1 className="text-lg font-semibold tracking-tight">Earpiece AI — Settings</h1>
-            <p className="text-ep-muted text-[12px]">Provider, model and recognition options</p>
-          </div>
-        </header>
+        <Header logoSize="md" title="Earpiece AI — Settings" subtitle="Provider, model and recognition options" />
 
         <ProviderSection
           config={draft}

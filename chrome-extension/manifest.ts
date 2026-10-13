@@ -26,7 +26,7 @@ const manifest = {
   },
   version: packageJson.version,
   description: '__MSG_extensionDescription__',
-  host_permissions: [],
+  host_permissions: ['https://api.anthropic.com/*', 'https://openrouter.ai/*', 'https://api.z.ai/*'],
   permissions: ['storage', 'tabCapture', 'offscreen', 'sidePanel', 'activeTab', 'scripting'],
   options_page: 'options/index.html',
   background: {
@@ -54,6 +54,22 @@ const manifest = {
   ],
   side_panel: {
     default_path: 'side-panel/index.html',
+  },
+  commands: {
+    'toggle-listening': {
+      suggested_key: {
+        default: 'Alt+L',
+        mac: 'Alt+L',
+      },
+      description: 'Toggle listening',
+    },
+    'dismiss-suggestion': {
+      suggested_key: {
+        default: 'Alt+D',
+        mac: 'Alt+D',
+      },
+      description: 'Dismiss suggestion',
+    },
   },
 } satisfies ManifestType;
 

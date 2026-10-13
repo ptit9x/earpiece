@@ -22,7 +22,9 @@ import {
 } from '@extension/shared';
 
 // Open the side panel when the toolbar action is clicked
-chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch(() => {});
+if (chrome.sidePanel) {
+  chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch(() => {});
+}
 
 const OFFSCREEN_PATH = 'offscreen/offscreen.html';
 
@@ -198,6 +200,7 @@ function mirrorConfig(cfg) {
 async function startListening(tabId) {
   const cfg = await getConfig();
   if (!tabId) throw new Error('No meeting tab to listen to.');
+  console.log('[Earpiece] startListening tabId=', tabId);
 
   state.tabId = tabId;
   state.buffer = new ConversationBuffer({
@@ -214,22 +217,31 @@ async function startListening(tabId) {
   // every segment is treated as remote.
   try {
     await ensureOffscreen();
+    console.log('[Earpiece] offscreen doc ready');
     const streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tabId });
+    console.log('[Earpiece] got streamId:', streamId?.slice(0, 20), '…');
     await chrome.runtime.sendMessage({ target: 'offscreen', type: 'start-capture', streamId });
+    console.log('[Earpiece] tab capture started');
   } catch (err) {
-    // state.lastError = `Tab audio unavailable: ${err.message}`;
+    console.warn('[Earpiece] tab capture failed:', err);
   }
 
   // Both sources start. Captions take over as soon as any arrive; until then
   // Web Speech is the only thing producing a transcript at all.
   state.source = 'speech';
   state.lastCaptionTs = 0;
-  await chrome.tabs.sendMessage(tabId, { type: 'start-captions' }).catch(() => {});
-  await chrome.runtime.sendMessage({ target: 'offscreen', type: 'start-stt', config: cfg }).catch(() => {});
+  await chrome.tabs
+    .sendMessage(tabId, { type: 'start-captions' })
+    .catch(e => console.warn('[Earpiece] start-captions to tab failed:', e));
+  const sttResult = await chrome.runtime
+    .sendMessage({ target: 'offscreen', type: 'start-stt', config: cfg })
+    .catch(e => console.warn('[Earpiece] start-stt failed:', e));
+  console.log('[Earpiece] start-stt result:', sttResult);
   broadcast({ type: 'debug-mode', on: state.debugAllRemote });
   state.listening = true;
   await setConfig({ listening: true });
   broadcast({ type: 'status', status: 'listening' });
+  console.log('[Earpiece] now listening — source:', state.source, 'sttLang:', cfg.sttLang);
   return { listening: true };
 }
 

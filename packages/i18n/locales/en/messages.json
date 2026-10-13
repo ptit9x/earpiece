@@ -1,11 +1,11 @@
 {
   "extensionDescription": {
     "description": "Extension description",
-    "message": "Live meeting transcription + AI answer copilot for video call interviews (Meet / Zoom / Teams)."
+    "message": "Real-time transcription and AI-powered answer suggestions for your video interviews on Meet, Zoom, and Teams."
   },
   "extensionName": {
     "description": "Extension name",
-    "message": "Earpiece AI"
+    "message": "Earpiece AI - Interview Assistant"
   },
   "panelStatusIdle": {
     "message": "Idle — click Start to capture the call"

@@ -5,6 +5,7 @@ import type { EarpieceConfig } from '@extension/shared/lib/hooks/use-config';
 
 const PROVIDERS = [
   { id: 'anthropic', label: 'Anthropic (Claude)', hint: 'api.anthropic.com' },
+  { id: 'zhipu', label: 'Z.ai GLM', hint: 'api.z.ai — ChatGLM' },
   { id: 'openai-compatible', label: 'OpenAI-compatible', hint: 'OpenRouter, Groq, local…' },
 ] as const;
 
@@ -19,10 +20,12 @@ type Props = {
 
 const ProviderSection = ({ config, patch, models, modelsLoading, modelsError, onLoadModels }: Props) => {
   const isCompat = config.provider === 'openai-compatible';
+  const isZhipu = config.provider === 'zhipu';
+  const showFetchModels = isCompat || isZhipu;
 
   return (
     <Card title="AI Provider">
-      <div className="mb-4 grid grid-cols-2 gap-2">
+      <div className="mb-4 grid grid-cols-3 gap-2">
         {PROVIDERS.map(p => (
           <button
             key={p.id}
@@ -66,10 +69,12 @@ const ProviderSection = ({ config, patch, models, modelsLoading, modelsError, on
             <Input
               value={config.model}
               onChange={e => patch({ model: e.target.value })}
-              placeholder={isCompat ? 'meta-llama/llama-4-scout:free' : 'claude-haiku-4-5'}
+              placeholder={
+                isZhipu ? 'glm-4-flash-250414' : isCompat ? 'meta-llama/llama-4-scout:free' : 'claude-haiku-4-5'
+              }
               spellCheck={false}
             />
-            {isCompat && (
+            {showFetchModels && (
               <Button onClick={onLoadModels} loading={modelsLoading} className="shrink-0" size="sm">
                 Fetch
               </Button>

@@ -18,7 +18,11 @@ const RecognitionSection = ({ config, patch }: Props) => (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <Field label="Your name" hint="STT hears it right more often">
-          <Input value={config.userName} onChange={e => patch({ userName: e.target.value })} placeholder="Viet" />
+          <Input
+            value={config.userName}
+            onChange={e => patch({ userName: e.target.value })}
+            placeholder="Lap trinh la cuoc song"
+          />
         </Field>
         <Field label="STT language">
           <Select value={config.sttLang} onChange={e => patch({ sttLang: e.target.value })}>
