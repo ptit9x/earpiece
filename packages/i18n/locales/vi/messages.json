@@ -1,11 +1,11 @@
 {
   "extensionDescription": {
     "description": "Extension description",
-    "message": "Ghi âm + chuyển giọng nói thành văn bản thời gian thực, gợi ý câu trả lời bằng AI cho các buổi phỏng vấn qua video call (Meet / Zoom / Teams)."
+    "message": "Bóc băng thời gian thực và gợi ý câu trả lời thông minh bằng AI cho các buổi phỏng vấn qua Meet, Zoom và Teams."
   },
   "extensionName": {
     "description": "Extension name",
-    "message": "Earpiece AI"
+    "message": "Earpiece AI - Trợ lý phỏng vấn"
   },
   "panelStatusIdle": {
     "message": "Chờ — bấm Start để bắt đầu nghe cuộc họp"

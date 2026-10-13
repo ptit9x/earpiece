@@ -101,12 +101,53 @@ class SpeechListener {
     this.watchdog = null;
   }
 
-  start(cfg) {
+  async start(cfg) {
+    console.log(
+      '[Earpiece offscreen] STT start called, SpeechRecognition=',
+      !!SpeechRecognition,
+      'lang=',
+      cfg?.sttLang,
+    );
     if (!SpeechRecognition) {
       send({ type: 'stt-error', error: 'This browser has no Web Speech API.' });
       return;
     }
-    if (this.running) return;
+    if (this.running) {
+      console.log('[Earpiece offscreen] STT already running, skip');
+      return;
+    }
+
+    // Chrome requires an explicit getUserMedia grant before SpeechRecognition
+    // can access the mic from an offscreen document. The stream itself is not
+    // used — we release it immediately — but the permission persists.
+    try {
+      const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const track = micStream.getAudioTracks()[0];
+      if (track) {
+        const settings = track.getSettings();
+        console.log(
+          '[Earpiece offscreen] mic track:',
+          track.label,
+          'deviceId:',
+          settings.deviceId?.slice(0, 12),
+          'sampleRate:',
+          settings.sampleRate,
+          'channelCount:',
+          settings.channelCount,
+          'muted:',
+          track.muted,
+          'enabled:',
+          track.enabled,
+        );
+      }
+      micStream.getTracks().forEach(t => t.stop());
+      console.log('[Earpiece offscreen] mic permission granted');
+    } catch (err) {
+      console.error('[Earpiece offscreen] mic permission denied:', err);
+      send({ type: 'stt-error', error: 'Microphone access denied. Grant mic permission to the extension.' });
+      return;
+    }
+
     this.running = true;
     this.resultCount = 0;
     this.lastFinalTs = Date.now();
@@ -135,6 +176,7 @@ class SpeechListener {
   }
 
   spawn(cfg) {
+    console.log('[Earpiece offscreen] spawning SpeechRecognition, lang=', cfg?.sttLang || 'en-US');
     const rec = new SpeechRecognition();
     this.rec = rec;
     rec.lang = cfg?.sttLang || 'en-US';
@@ -166,6 +208,7 @@ class SpeechListener {
     };
 
     rec.onerror = event => {
+      console.warn('[Earpiece offscreen] STT error:', event.error);
       if (event.error === 'no-speech' || event.error === 'aborted') return;
       if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
         this.running = false;
@@ -176,6 +219,7 @@ class SpeechListener {
     };
 
     rec.onend = () => {
+      console.log('[Earpiece offscreen] STT ended, running=', this.running, 'will restart in', this.restartDelay, 'ms');
       if (!this.running) return;
       setTimeout(() => {
         if (this.running) this.spawn(cfg);
@@ -184,8 +228,10 @@ class SpeechListener {
 
     try {
       rec.start();
+      console.log('[Earpiece offscreen] SpeechRecognition.start() succeeded');
       this.restartDelay = 300;
-    } catch {
+    } catch (e) {
+      console.error('[Earpiece offscreen] SpeechRecognition.start() FAILED:', e);
       this.restartDelay = Math.min(this.restartDelay * 2, 5000);
     }
   }

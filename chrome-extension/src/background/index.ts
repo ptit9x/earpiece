@@ -22,7 +22,9 @@ import {
 } from '@extension/shared';
 
 // Open the side panel when the toolbar action is clicked
-chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch(() => {});
+if (chrome.sidePanel) {
+  chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch(() => {});
+}
 
 const OFFSCREEN_PATH = 'offscreen/offscreen.html';
 
@@ -199,6 +201,24 @@ async function startListening(tabId) {
   const cfg = await getConfig();
   if (!tabId) throw new Error('No meeting tab to listen to.');
 
+  // Validate that the target tab is actually a meeting page.
+  let tab;
+  try {
+    tab = await chrome.tabs.get(tabId);
+  } catch {
+    throw new Error('Cannot access the tab. Is it still open?');
+  }
+  const url = tab?.url || '';
+  const isMeeting = /meet\.google\.com|\.zoom\.us|\.teams\.microsoft\.com/.test(url);
+  if (!isMeeting) {
+    console.warn('[Earpiece] tab is not a meeting page:', url);
+    throw new Error(
+      `Active tab is not a meeting page (${url.slice(0, 60)}…). ` +
+        'Switch to the Google Meet / Zoom / Teams tab and try again.',
+    );
+  }
+  console.log('[Earpiece] startListening tabId=', tabId, 'url=', url.slice(0, 60));
+
   state.tabId = tabId;
   state.buffer = new ConversationBuffer({
     maxTurns: 40,
@@ -214,22 +234,54 @@ async function startListening(tabId) {
   // every segment is treated as remote.
   try {
     await ensureOffscreen();
+    console.log('[Earpiece] offscreen doc ready');
     const streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tabId });
+    console.log('[Earpiece] got streamId:', streamId?.slice(0, 20), '…');
     await chrome.runtime.sendMessage({ target: 'offscreen', type: 'start-capture', streamId });
+    console.log('[Earpiece] tab capture started');
   } catch (err) {
-    // state.lastError = `Tab audio unavailable: ${err.message}`;
+    console.warn('[Earpiece] tab capture failed:', err);
   }
 
   // Both sources start. Captions take over as soon as any arrive; until then
   // Web Speech is the only thing producing a transcript at all.
   state.source = 'speech';
   state.lastCaptionTs = 0;
-  await chrome.tabs.sendMessage(tabId, { type: 'start-captions' }).catch(() => {});
-  await chrome.runtime.sendMessage({ target: 'offscreen', type: 'start-stt', config: cfg }).catch(() => {});
+
+  // Try sending start-captions to the content script. If the content script
+  // is not loaded (extension was reloaded but the tab wasn't refreshed),
+  // inject it dynamically via chrome.scripting and retry.
+  let captionsStarted = false;
+  try {
+    const r = await chrome.tabs.sendMessage(tabId, { type: 'start-captions' });
+    console.log('[Earpiece] start-captions result:', r);
+    captionsStarted = true;
+  } catch (e) {
+    console.warn('[Earpiece] start-captions failed, injecting content script…', e);
+    try {
+      await chrome.scripting.executeScript({
+        target: { tabId },
+        files: ['content/all.iife.js'],
+      });
+      console.log('[Earpiece] content script injected successfully');
+      // Give it a moment to initialize, then retry.
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const r = await chrome.tabs.sendMessage(tabId, { type: 'start-captions' });
+      console.log('[Earpiece] start-captions result (after inject):', r);
+      captionsStarted = true;
+    } catch (e2) {
+      console.warn('[Earpiece] content script injection failed:', e2);
+    }
+  }
+  const sttResult = await chrome.runtime
+    .sendMessage({ target: 'offscreen', type: 'start-stt', config: cfg })
+    .catch(e => console.warn('[Earpiece] start-stt failed:', e));
+  console.log('[Earpiece] start-stt result:', sttResult);
   broadcast({ type: 'debug-mode', on: state.debugAllRemote });
   state.listening = true;
   await setConfig({ listening: true });
   broadcast({ type: 'status', status: 'listening' });
+  console.log('[Earpiece] now listening — source:', state.source, 'sttLang:', cfg.sttLang);
   return { listening: true };
 }
 
@@ -345,8 +397,11 @@ function noteCaptionActivity() {
 }
 
 async function switchSource(source, detail) {
+  console.log('[Earpiece] switchSource →', source, ':', detail);
   state.source = source;
   broadcast({ type: 'source', source, detail });
+  // Switching to captions means STT silence is expected — clear any warning.
+  if (source === 'captions') broadcast({ type: 'warning', warning: '' });
   if (state.tabId == null) return;
   try {
     const cfg = await getConfig();

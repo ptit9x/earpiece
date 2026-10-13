@@ -18,7 +18,7 @@ const BTN_VARIANTS: Record<ButtonVariant, string> = {
   primary:
     'bg-gradient-to-r from-[var(--ep-accent)] to-[var(--ep-accent-2)] text-white shadow-ep-glow hover:brightness-110',
   ghost: 'border border-ep-border bg-ep-surface-2 text-ep-muted hover:border-ep-border-strong hover:text-ep-text',
-  danger: 'bg-[var(--ep-danger)]/90 text-white shadow-ep hover:bg-[var(--ep-danger)]',
+  danger: 'bg-[var(--ep-danger)] text-white shadow-ep hover:brightness-110',
   subtle: 'text-ep-muted hover:bg-ep-surface-2 hover:text-ep-text',
 };
 

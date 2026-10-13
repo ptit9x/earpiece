@@ -2,6 +2,8 @@
 // @ts-nocheck
 // Central defaults and storage access. Everything the user can tune lives here.
 
+export const ZHIPU_BASE_URL = 'https://api.z.ai/api/coding/paas/v4';
+
 export const DEFAULTS = {
   // Identity: how the user is addressed in meetings. Nicknames and common
   // mishearings matter more than the legal name, because STT will mangle it.

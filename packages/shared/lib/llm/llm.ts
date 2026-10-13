@@ -10,14 +10,15 @@ import {
   DEFAULT_BASE_URL,
 } from './openai-compatible-client.js';
 import { TRANSLATE_SYSTEM, buildTranslateMessage, cleanTranslation } from './translate.js';
+import { ZHIPU_BASE_URL } from './config.js';
 
 export { DEFAULT_BASE_URL };
 
 export function suggestReply(cfg, call) {
-  if (cfg.provider === 'openai-compatible') {
+  if (cfg.provider === 'openai-compatible' || cfg.provider === 'zhipu') {
     return suggestReplyOpenAICompatible({
       apiKey: cfg.apiKey,
-      baseUrl: cfg.baseUrl,
+      baseUrl: cfg.provider === 'zhipu' ? ZHIPU_BASE_URL : cfg.baseUrl,
       model: cfg.model,
       maxTokens: cfg.maxTokens,
       disableThinking: cfg.disableThinking !== false,
@@ -46,10 +47,10 @@ export async function translate(cfg, text, signal) {
   };
 
   const raw =
-    cfg.provider === 'openai-compatible'
+    cfg.provider === 'openai-compatible' || cfg.provider === 'zhipu'
       ? await completeTextOpenAICompatible({
           apiKey: cfg.apiKey,
-          baseUrl: cfg.baseUrl,
+          baseUrl: cfg.provider === 'zhipu' ? ZHIPU_BASE_URL : cfg.baseUrl,
           disableThinking: cfg.disableThinking !== false,
           ...args,
         })
